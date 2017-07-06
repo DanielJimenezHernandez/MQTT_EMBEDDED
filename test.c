@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-
+/* MQTT PAHO test implementation for later porting to FRDM-K64F with Thread*/
 /*MQTT INCLUDES*/
 #include "MQTTPacket.h"
 
