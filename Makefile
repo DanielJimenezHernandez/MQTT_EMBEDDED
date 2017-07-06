@@ -30,11 +30,12 @@ test.o
 
 
 
-testapp: $(OBJS)
+$(TESTAPP): $(OBJS)
 	gcc -o $@ $(OBJS) $(CFLAGS)
 
 .PHONY: clean
 
 clean:
-	rm ./*.o
-	rm ./$(MQTT_DIR)/*.o
+	-rm ./*.o
+	-rm ./$(MQTT_DIR)/*.o
+	-rm $(TESTAPP)

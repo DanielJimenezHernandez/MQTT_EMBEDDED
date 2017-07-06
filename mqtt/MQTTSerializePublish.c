@@ -24,7 +24,7 @@
 /**
   * Determines the length of the MQTT publish packet that would be produced using the supplied parameters
   * @param qos the MQTT QoS of the publish (packetid is omitted for QoS 0)
-  * @param topicName the topic name to be used in the publish  
+  * @param topicName the topic name to be used in the publish
   * @param payloadlen the length of the payload to be sent
   * @return the length of buffer needed to contain the serialized version of the packet
   */
@@ -90,7 +90,21 @@ exit:
 	return rc;
 }
 
-
+/* Wrapper for the serialize function with options */
+int MQTTSerialize_publish_opt(unsigned char* buf, int buflen, MQTTPacket_publishData* options)
+{
+        int ret;
+        ret = MQTTSerialize_publish(buf,
+                buflen,
+                options->dup,
+                options->qos,
+                options->retained,
+                options->packetid,
+        	options->topicName,
+                options->payload,
+                options->payloadlen);
+        return ret;
+}
 
 /**
   * Serializes the ack packet into the supplied buffer.
@@ -165,5 +179,3 @@ int MQTTSerialize_pubcomp(unsigned char* buf, int buflen, unsigned short packeti
 {
 	return MQTTSerialize_ack(buf, buflen, PUBCOMP, 0, packetid);
 }
-
-

@@ -121,6 +121,20 @@ typedef union
 #endif
 } MQTTConnackFlags;	/**< connack flags byte */
 
+typedef struct
+{
+        unsigned char dup;
+        int qos;
+        unsigned char retained;
+        unsigned short packetid;
+        MQTTString topicName;
+        unsigned char* payload;
+        int payloadlen;
+
+}MQTTPacket_publishData;
+
+#define MQTTPacket_publishData_initializer { 0,0,0,0,{NULL,{0,NULL}},NULL,0 }
+
 #define MQTTPacket_connectData_initializer { {'M', 'Q', 'T', 'C'}, 0, 4, {NULL, {0, NULL}}, 60, 1, 0, \
 		MQTTPacket_willOptions_initializer, {NULL, {0, NULL}}, {NULL, {0, NULL}} }
 

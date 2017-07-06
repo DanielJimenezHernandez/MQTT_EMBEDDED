@@ -120,7 +120,9 @@ char* MQTTFormat_toClientString(char* strbuf, int strbuflen, unsigned char* buf,
 	int rem_length = 0;
 	MQTTHeader header = {0};
 	int strindex = 0;
-
+        /*set but not used error removal*/
+        (void)strindex;
+        
 	header.byte = buf[index++];
 	index += MQTTPacket_decodeBuf(&buf[index], &rem_length);
 
@@ -188,6 +190,8 @@ char* MQTTFormat_toServerString(char* strbuf, int strbuflen, unsigned char* buf,
 	int rem_length = 0;
 	MQTTHeader header = {0};
 	int strindex = 0;
+        /*set but not used error removal*/
+        (void)strindex;
 
 	header.byte = buf[index++];
 	index += MQTTPacket_decodeBuf(&buf[index], &rem_length);
