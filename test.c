@@ -45,7 +45,7 @@ int main(int argc, char const *argv[]) {
         struct sockaddr_in server;
         char message[1000] , server_reply[2000];
         /*Connect packet serialization example */
-        strcpy(clientID,"mosqpub/4440-debian");
+        strcpy(clientID,"FRDM-K64F");
         MQTTPacket_connectData default_options_connect = MQTTPacket_connectData_initializer;
         default_options_connect.MQTTVersion = 4;
         default_options_connect.clientID.cstring = &clientID[0];
@@ -88,6 +88,7 @@ int main(int argc, char const *argv[]) {
         //keep communicating with server
         while(1)
         {
+
 
             //Send some data
             if( send(sock , connect_packet , len_connect , 0) < 0)
@@ -172,8 +173,11 @@ int MQTTdeserializePacket(unsigned char * buffer){
         header.remainingLen = (*tmpBuffer);
         tempMSG = MQTT_MsgType2Str(header.packetType);
         printf("Server Response:%s, Message Length:%d\n",tempMSG,header.remainingLen);
-        if (CONNACK == header.packetType){
-                return 1;
+        switch (header.packetType){
+                case CONNACK:
+                case PUBACK:
+                case SUBACK:
+
         }
 
         return 0;
