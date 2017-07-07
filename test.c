@@ -9,7 +9,7 @@
 #define BUFF_SIZE 1024
 #define TOPIC "a/b"
 #define PORT 1883
-#define ADDR "127.0.0.1"
+#define ADDR "192.168.1.5"
 
 /* connack*/
 char testbuffer[4] = {0x20,0x02,0x00,0x00};
@@ -173,12 +173,8 @@ int MQTTdeserializePacket(unsigned char * buffer){
         header.remainingLen = (*tmpBuffer);
         tempMSG = MQTT_MsgType2Str(header.packetType);
         printf("Server Response:%s, Message Length:%d\n",tempMSG,header.remainingLen);
-        switch (header.packetType){
-                case CONNACK:
-                case PUBACK:
-                case SUBACK:
-
+        if (header.packetType == CONNACK){
+          return 1;
         }
-
         return 0;
 }
