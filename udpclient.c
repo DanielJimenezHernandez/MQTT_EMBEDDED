@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include "MQTTPacket.h"
 
-#define SERVER "192.168.1.88"
+#define SERVER "192.168.1.5"
 #define BUFLEN 1024  //Max length of buffer
 #define PORT 8888   //The port on which to send data
 #define PAYLOAD "Hello"

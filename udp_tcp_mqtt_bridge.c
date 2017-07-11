@@ -32,11 +32,17 @@ unsigned char disconnect_package[2] = {0xe0,0x00};
 char * strBrokerAddr,strBrokerPort,strUdpPort;
 int brokerPort;
 int udpPort;
+int *s_out, *slen_out;
+struct sockaddr_in * si_other_out;
+int flag_send_reconnect = 0;
+char ReconnectPackage = {0xff,0x01};
 
 /* Catch Signal Handler functio */
 void signal_callback_handler(int signum){
 
-        printf("Caught signal SIGPIPE %d\n",signum);
+        flag_send_reconnect = 1;
+        printf("Caught signal SIGPIPE Sending error to client %d\n",signum);
+
 }
 
 void printMessage(unsigned char *buf,int len,const char* description){
@@ -66,6 +72,10 @@ void *UDPServer(void *port){
 
   int s, slen = sizeof(si_other) , recv_len,true;
 
+  s_out = &s;
+  slen_out = &slen;
+  si_other_out = &si_other;
+
   //create a UDP socket
   if ((s=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
   {
@@ -92,12 +102,20 @@ void *UDPServer(void *port){
   {
       //printf("Waiting for data...");
       fflush(stdout);
-
+      if (flag_send_reconnect){
+        printf("Sending Reconnect Package\n");
+        if (sendto(s, ReconnectPackage, 2, 0, (struct sockaddr*) &si_other, slen) == -1)
+        {
+            die("sendto()");
+        }
+        flag_send_reconnect = 0;
+      }
       //try to receive some data, this is a blocking call
       if ((recv_len = recvfrom(s, sharedUdpBuffer, BUFSIZE, 0, (struct sockaddr *) &si_other,(socklen_t *) &slen)) == -1)
       {
           die("recvfrom()");
       }
+
       sem_post (&receivedUdpMutex);
       //print details of the client/peer and the data received
       udp_mqtt_len = (int)sharedUdpBuffer[1] + 2;
